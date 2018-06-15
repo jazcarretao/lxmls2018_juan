@@ -39,13 +39,15 @@ class MultinomialNaiveBayes(lc.LinearClassifier):
         # (*) recall that Python starts indices at 0, so an index of 4
         # corresponds to the fifth feature!
 
-        # ----------
-        # Solution to Exercise 1
+        indices = (y == classes)
+        occurrences = np.sum(indices, axis=0)
+        prior = occurrences/n_docs
 
-        raise NotImplementedError("Complete Exercise 1")
-
-        # End solution to Exercise 1
-        # ----------
+        for k in range(n_classes):
+            mask = indices[:, k]  # (n_docs,)
+            class_occurrences_of_words = x[mask, :]  # (less then n_docs, n_words)
+            class_occurrences_of_words_sum = np.sum(class_occurrences_of_words)
+            likelihood[:, k] = (1 + np.sum(class_occurrences_of_words, axis=0))/(n_words + class_occurrences_of_words_sum)
 
         params = np.zeros((n_words+1, n_classes))
         for i in range(n_classes):
